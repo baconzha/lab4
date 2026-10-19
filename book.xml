@@ -20,4 +20,9 @@
         <author>Jane Austen</author>
         <price>11.25</price>
     </book>
+    <book id="5">
+        <title>The Hobbit</title>
+        <author>J.R.R. Tolkien</author>
+        <price>14.99</price>
+    </book>
 </catalogue>
