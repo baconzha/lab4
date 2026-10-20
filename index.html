@@ -54,10 +54,14 @@
 <script>
 // part 1: load xml
 fetch('book.xml')
-    .then(function(res) { return res.text(); })
-    .then(function(text) {
-        var doc = new DOMParser().parseFromString(text, 'application/xml');
-        var books = doc.getElementsByTagName('book');
+    .then(function(response) {
+        if (!response.ok) throw new Error('Fetch error: ' + response.status);
+        return response.text();
+    })
+    .then(function(xmlText) {
+        var parser = new DOMParser();
+        var xmlDoc = parser.parseFromString(xmlText, 'text/xml');
+        var books = xmlDoc.getElementsByTagName('book');
         var table = document.getElementById('bookTable');
         for (var i = 0; i < books.length; i++) {
             var row = table.insertRow();
@@ -66,14 +70,18 @@ fetch('book.xml')
             row.insertCell().textContent = books[i].getElementsByTagName('author')[0].textContent;
             row.insertCell().textContent = '$' + books[i].getElementsByTagName('price')[0].textContent;
         }
-    });
+    })
+    .catch(function(err) { console.error('Fetch error: ' + err.message); });
 
 // part 2: load json
 fetch('userProfiles.json')
-    .then(function(res) { return res.json(); })
-    .then(function(users) {
+    .then(function(response) {
+        if (!response.ok) throw new Error('Fetch error: ' + response.status);
+        return response.json();
+    })
+    .then(function(json) {
         var table = document.getElementById('userTable');
-        users.forEach(function(u) {
+        json.forEach(function(u) {
             var row = table.insertRow();
             row.insertCell().textContent = u.firstName + ' ' + u.lastName;
             row.insertCell().textContent = u.email;
@@ -84,7 +92,8 @@ fetch('userProfiles.json')
             row.insertCell().textContent = p.theme + ' / ' + p.language +
                 ' / notifications:' + p.notifications + ' / subscribed:' + p.subscription;
         });
-    });
+    })
+    .catch(function(err) { console.error('Fetch error: ' + err.message); });
 </script>
 
 </body>
